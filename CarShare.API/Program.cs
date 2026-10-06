@@ -14,7 +14,7 @@ namespace CarShare
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -103,6 +103,19 @@ namespace CarShare
 
             var app = builder.Build();
 
+            // Auto-migrate and seed initial demo accounts
+            try
+            {
+                using var scope = app.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<CarShareDbContext>();
+                await DatabaseSeeder.SeedAsync(dbContext);
+            }
+            catch (Exception ex)
+            {
+                var logger = app.Services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred while migrating/seeding the database.");
+            }
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -120,7 +133,7 @@ namespace CarShare
 
             app.MapControllers();
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }
