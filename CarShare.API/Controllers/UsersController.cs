@@ -1,4 +1,4 @@
-﻿using CarShare.BLL.Interfaces;
+using CarShare.BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +19,11 @@ namespace CarShare.API.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {
-            // Get userId from JWT in real implementation
-            var userId = Guid.Parse(User.FindFirst("sub")?.Value);
-            var result = await _userService.GetProfileAsync(userId);
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized("Invalid user identification in token.");
+
+            var result = await _userService.GetProfileAsync(userId.Value);
             return HandleResult(result);
         }
     }

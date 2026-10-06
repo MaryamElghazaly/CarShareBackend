@@ -1,4 +1,4 @@
-﻿using CarShare.BLL.DTOs.Car;
+using CarShare.BLL.DTOs.Car;
 using CarShare.BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,15 +36,11 @@ namespace CarShare.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CarCreateDTO carDTO)
         {
-            // Optional: Debugging claims
-            var allClaims = User.Claims.Select(c => $"{c.Type}: {c.Value}");
-            Console.WriteLine(string.Join("\n", allClaims)); // Debugging line
+            var ownerId = GetCurrentUserId();
+            if (ownerId == null)
+                return Unauthorized("Invalid user identification in token.");
 
-            var ownerId = Guid.Parse(
-                User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value
-            );
-
-            var result = await _carService.CreateAsync(carDTO, ownerId);
+            var result = await _carService.CreateAsync(carDTO, ownerId.Value);
             return CreatedAtAction(nameof(GetById), new { id = result.CarId }, result);
         }
 

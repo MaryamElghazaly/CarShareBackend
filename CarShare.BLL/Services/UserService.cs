@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using CarShare.BLL.DTOs.User;
 using CarShare.BLL.Interfaces;
 using CarShare.DAL.Enums;
@@ -90,18 +90,21 @@ namespace CarShare.BLL.Services
         private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+            var jwtKey = _configuration["Jwt:Key"] ?? "DefaultSecretKeyForCarShareApp2025!";
+            var key = Encoding.UTF8.GetBytes(jwtKey);
+            var expiry = double.TryParse(_configuration["Jwt:ExpiryInMinutes"], out var exp) ? exp : 120;
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.Role.ToString())
-
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:ExpiryInMinutes"])),
+                Expires = DateTime.UtcNow.AddMinutes(expiry),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using CarShare.DAL.Data;
 using CarShare.DAL.Interfaces;
 using CarShare.DAL.Repositories;
@@ -39,7 +39,6 @@ namespace CarShare
             // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
 
             // To allow Swagger UI to test authenticated endpoints
             builder.Services.AddSwaggerGen(options =>
@@ -47,7 +46,7 @@ namespace CarShare
                 options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                    Description = "Enter JWT token",
+                    Description = "Enter JWT Bearer token like: Bearer {your token}",
                     Name = "Authorization",
                     Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
                     Scheme = "Bearer"
@@ -81,7 +80,7 @@ namespace CarShare
                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
                         ValidAudience = builder.Configuration["Jwt:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "DefaultSecretKeyForCarShareApp2025!")),
                         NameClaimType = JwtRegisteredClaimNames.Sub
                     };
                 });
@@ -94,9 +93,10 @@ namespace CarShare
             {
                 options.AddPolicy("AllowReactApp", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173") // شيل المسافة والـ slash
+                    policy.WithOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:5174", "http://127.0.0.1:5173")
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                 });
             });
 
@@ -111,12 +111,12 @@ namespace CarShare
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseCors("AllowReactApp"); 
 
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

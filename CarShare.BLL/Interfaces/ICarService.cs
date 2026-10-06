@@ -1,4 +1,4 @@
-﻿using CarShare.BLL.DTOs.Car;
+using CarShare.BLL.DTOs.Car;
 using CarShare.DAL.Models;
 
 namespace CarShare.BLL.Interfaces
@@ -7,9 +7,7 @@ namespace CarShare.BLL.Interfaces
     {
         Task<CarResponseDTO> CreateAsync(CarCreateDTO carDTO, Guid ownerId);
         Task<IEnumerable<CarResponseDTO>> GetAllAvailableAsync();
-        Task<CarResponseDTO> GetByIdAsync(Guid carId);
+        Task<CarResponseDTO?> GetByIdAsync(Guid carId);
         Task ApproveCarAsync(Guid carId);
-       // Task<IEnumerable<Car>> GetAllAvailableWithOwnerAsync();
-
     }
 }
