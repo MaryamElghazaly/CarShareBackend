@@ -12,18 +12,17 @@ A robust, enterprise-ready RESTful Web API for a peer-to-peer car rental platfor
 ---
 
 ## 📌 Table of Contents
-- [✨ Key Features](#-key-features)
-- [🏗️ System Architecture](#️-system-architecture)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [🔑 Roles & Permissions](#-roles--permissions)
-- [📡 API Endpoints Overview](#-api-endpoints-overview)
-- [🚀 Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation & Configuration](#installation--configuration)
-  - [Database Migration](#database-migration)
-  - [Running the API](#running-the-api)
-- [📄 Database Diagram & Relationships](#-database-diagram--relationships)
-- [🌐 Frontend Repository & Live Demo](#-frontend-repository--live-demo)
+* [Key Features](#-key-features)
+* [System Architecture](#-system-architecture)
+* [Tech Stack](#-tech-stack)
+* [Roles and Permissions](#-roles--permissions)
+* [API Endpoints Overview](#-api-endpoints-overview)
+* [Getting Started](#-getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation and Configuration](#installation--configuration)
+  * [Database Migration](#database-migration)
+  * [Running the API](#running-the-api)
+* [Frontend Repository and Live Demo](#-frontend-repository--live-demo)
 
 ---
 
@@ -49,29 +48,25 @@ A robust, enterprise-ready RESTful Web API for a peer-to-peer car rental platfor
 
 The solution follows a structured **3-Tier / Layered Architecture**:
 
-```text
-├── CarShare.API (Presentation Layer)
-│   ├── Controllers (AuthController, CarsController, RentalsController, UsersController)
-│   ├── Middleware & Program.cs (CORS, JWT Authentication, Swagger OpenAPI)
-│   └── wwwroot/uploads (Uploaded document storage)
-│
-├── CarShare.BLL (Business Logic Layer)
-│   ├── DTOs (Car, Rental, User, Review)
-│   ├── Interfaces (ICarService, IRentalService, IUserService)
-│   ├── Services (CarService, RentalService, UserService)
-│   └── Mappings (AutoMapper Profiles)
-│
-└── CarShare.DAL (Data Access Layer)
-    ├── Entities / Models (User, Car, RentalProposal, Rental, Review)
-    ├── Data / DbContext (ApplicationDbContext)
-    └── Repositories (CarRepository, RentalRepository, UserRepository)
-```
+* **CarShare.API** *(Presentation Layer)*
+  * **Controllers**: `AuthController`, `CarsController`, `RentalsController`, `UsersController`, `BaseController`
+  * **Middleware & Configuration**: CORS Policy, JWT Authentication, Swagger OpenAPI
+  * **wwwroot/uploads**: Static storage for uploaded document verifications
+* **CarShare.BLL** *(Business Logic Layer)*
+  * **DTOs**: `Car`, `Rental`, `User`, `Review`
+  * **Interfaces**: `ICarService`, `IRentalService`, `IUserService`
+  * **Services**: `CarService`, `RentalService`, `UserService`
+  * **Mappings**: AutoMapper Profiles
+* **CarShare.DAL** *(Data Access Layer)*
+  * **Entities / Models**: `User`, `Car`, `RentalProposal`, `Rental`, `Review`
+  * **DbContext**: `ApplicationDbContext`
+  * **Repositories**: `CarRepository`, `RentalRepository`, `UserRepository`
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Language**: C# 12 / 13
+* **Language**: C#
 * **Framework**: ASP.NET Core Web API (.NET 9 / .NET 8)
 * **ORM**: Entity Framework Core
 * **Database**: Microsoft SQL Server
